@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:testing_app/appdetails.dart';
+import 'package:testing_app/myprofile.dart';
 
 class HomeScreen extends StatefulWidget {
   // const ({ Key? key }) : super(key: key);
@@ -49,6 +51,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 'Profile',
                 style: TextStyle(color: Colors.blue.shade400, fontSize: 20),
               ),
+              onTap: (){
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                    return Myprofile();
+                    }));
+              },
             ),
             ListTile(
               leading: Icon(Icons.favorite, color: Colors.pink),
@@ -63,6 +70,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 'App Details',
                 style: TextStyle(color: Colors.blue.shade400, fontSize: 20),
               ),
+              onTap: (){
+                Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                  return Appdetails();
+                }));
+              },
             ),
             ListTile(
               onTap: (){
