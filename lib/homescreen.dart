@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:testing_app/appdetails.dart';
+import 'package:testing_app/donations.dart';
+import 'package:testing_app/market.dart';
 import 'package:testing_app/myprofile.dart';
+import 'package:testing_app/recieved.dart';
+import 'package:testing_app/update_password.dart';
 
 class HomeScreen extends StatefulWidget {
   // const ({ Key? key }) : super(key: key);
@@ -11,129 +15,41 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int selectedIndex = 0;
+  var pages = [Market(), Donation(), Recieved(), Myprofile()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text('Home', style: TextStyle(color: Colors.blue.shade400)),
-        iconTheme: IconThemeData(color: Colors.blue.shade400),
-      ),
-      drawer: Drawer(
-        //want to decrease the size of drawer add container and set its widht
-
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue.shade900),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Align(
-                    alignment: Alignment.topCenter,
-                    child: Text(
-                      'MediCare',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                 // Image.asset('assets/img4.png'),
-                ],
-              ),
+      bottomNavigationBar: BottomNavigationBar(
+          onTap: (index) {
+            setState(() {
+              selectedIndex = index;
+            });
+          },
+          currentIndex: selectedIndex,
+          backgroundColor: Colors.blue,
+          unselectedLabelStyle: TextStyle(color: Colors.black),
+          showSelectedLabels: true,
+          showUnselectedLabels: true,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined, color: Colors.black),
+              label: 'Market',
             ),
-            ListTile(
-              leading: Icon(Icons.account_circle, color: Colors.green.shade400),
-              title: Text(
-                'Profile',
-                style: TextStyle(color: Colors.blue.shade400, fontSize: 20),
-              ),
-              onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                    return Myprofile();
-                    }));
-              },
+            BottomNavigationBarItem(
+              icon: Icon(Icons.done_all_outlined, color: Colors.black),
+              label: 'Donations',
             ),
-            ListTile(
-              leading: Icon(Icons.favorite, color: Colors.pink),
-              title: Text(
-                'Your Contribution\'s',
-                style: TextStyle(color: Colors.blue.shade400, fontSize: 20),
-              ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.add_task, color: Colors.black),
+              label: 'Recieved',
             ),
-            ListTile(
-              leading: Icon(Icons.article),
-              title: Text(
-                'App Details',
-                style: TextStyle(color: Colors.blue.shade400, fontSize: 20),
-              ),
-              onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                  return Appdetails();
-                }));
-              },
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline, color: Colors.black),
+              label: 'Profile',
             ),
-            ListTile(
-              onTap: (){
-                FirebaseAuth.instance.signOut();
-              },
-              leading: Icon(Icons.arrow_back),
-              title: Text(
-                'Sign Out',
-                style: TextStyle(color: Colors.blue.shade400, fontSize: 20),
-              ),
-            ),
-          ],
-        ),
-      ),
-      body: Stack(
-        children: [
-        //  Image.asset(
-          //  'assets/img3.jpg',
-         // ),
-          Container(
-            padding:
-            EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                SizedBox(
-                  height: 200,
-                  width: 150,
-                  child: ElevatedButton(
-                    onPressed: () => {},
-                    child: Text('Hello'),
-                    style: ElevatedButton.styleFrom(
-                        primary: Colors.lightGreen.shade600),
-                  ),
-                ),
-                SizedBox(
-                  height: 200,
-                  width: 150,
-                  child: ElevatedButton(
-                      onPressed: () => {},
-                      child: Stack(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(top: 90),
-                            child: Text(
-                              'Hello',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                          )
-                        ],
-                      ),
-                      style: ElevatedButton.styleFrom(
-                          primary: Colors.blue.shade900)),
-                )
-              ],
-            ),
-          )
-        ],
-      ),
+          ]),
+      body: pages[selectedIndex],
     );
   }
 }

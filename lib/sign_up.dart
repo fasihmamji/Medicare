@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:testing_app/login.dart';
 
 class MySignUp extends StatefulWidget {
-  const MySignUp({Key? key}) : super(key: key);
 
   @override
   _MySignUpState createState() => _MySignUpState();
