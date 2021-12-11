@@ -61,19 +61,16 @@ class _MyprofileState extends State<Myprofile> {
               style:
                   TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
           actions: [
-            IconButton(
-                icon: Icon(Icons.more_horiz),
+            TextButton(
+                child: Text('Log Out'),
                 onPressed: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) {
-                    return Editprofile();
-                  }));
+                  auth.signOut();
                 })
           ]),
       body: Padding(
         padding: EdgeInsets.all(16.0),
-        child: FutureBuilder<DocumentSnapshot>(
-          future: users.doc(currentUser?.uid).get(),
+        child: StreamBuilder<DocumentSnapshot>(
+          stream: users.doc(currentUser?.uid).snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
             if (snapshot.hasError) {
@@ -84,7 +81,11 @@ class _MyprofileState extends State<Myprofile> {
               return Text("Document does not exist");
             }
 
-            if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
               Map<String, dynamic> data =
                   snapshot.data!.data() as Map<String, dynamic>;
               return ListView(
@@ -145,7 +146,6 @@ class _MyprofileState extends State<Myprofile> {
                   SizedBox(
                     height: 3,
                   ),
-
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 36),
                     child: Row(
@@ -187,36 +187,33 @@ class _MyprofileState extends State<Myprofile> {
                                     );
                                   }));
                         }),
+                        cardTile(Icons.logout, 'Edit Profile', () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return Editprofile(
+                              uid: currentUser?.uid,
+                              fname: data['fname'],
+                              lname: data['lname'],
+                              address: data['address'],
+                              phoneno: data['phoneno'],
+                              country: data['country'],
+                              city: data['city'],
+                              zip: data['zip'],
+                            );
+                          }));
+                        }),
                         cardTile(Icons.settings, 'Settings', () {
                           Navigator.of(context)
                               .push(MaterialPageRoute(builder: (context) {
                             return Settingspass();
                           }));
                         }),
-                        cardTile(Icons.logout, 'Log Out', () {
-                          Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (context) {
-                            return Login();
-                          }));
-                        }),
                       ],
                     ),
                   ),
-
-                  // Text('Email: ${data['email']}'),
-                  // Text('Address: ${data['address']}'),
-                  // Text('Phone Number: ${data['phoneno']}'),
-                  // Text('Age: ${data['age']}'),
-                  // Text('Dob: ${data['dob']}'),
-                  // Text('CNIC: ${data['cnic']}'),
-                  // Text('Country: ${data['country']}'),
-                  // Text('City: ${data['city']}'),
-                  // Text('Zip Code: ${data['zip']}'),
                 ],
               );
             }
-
-            return Text("loading");
           },
         ),
       ),

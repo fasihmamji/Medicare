@@ -1,13 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:testing_app/homescreen.dart';
+import 'package:testing_app/myprofile.dart';
 
 class Editprofile extends StatefulWidget {
-  const Editprofile({Key? key}) : super(key: key);
+  final uid;
+  final fname;
+  final lname;
+  final address;
+  final phoneno;
+  final country;
+  final city;
+  final zip;
+  const Editprofile({
+    Key? key,
+    this.uid,
+    this.fname,
+    this.lname,
+    this.address,
+    this.phoneno,
+    this.country,
+    this.city,
+    this.zip,
+  }) : super(key: key);
 
   @override
   _EditprofileState createState() => _EditprofileState();
 }
 
 class _EditprofileState extends State<Editprofile> {
+  final fnameController = TextEditingController();
+  final lnameController = TextEditingController();
+  final addressController = TextEditingController();
+  final phonenoController = TextEditingController();
+  final countryController = TextEditingController();
+  final cityController = TextEditingController();
+  final zipController = TextEditingController();
+  FirebaseFirestore db = FirebaseFirestore.instance;
+  @override
+  void initState() {
+    super.initState();
+    fnameController.text = widget.fname;
+    lnameController.text = widget.lname;
+    addressController.text = widget.address;
+    phonenoController.text = widget.phoneno;
+    countryController.text = widget.country;
+    cityController.text = widget.city;
+    zipController.text = widget.zip;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,11 +93,11 @@ class _EditprofileState extends State<Editprofile> {
                 height: 35,
               ),
               TextField(
+                controller: fnameController,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.only(bottom: 3),
                   labelText: 'First Name',
                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                  hintText: 'Fasih',
                   hintStyle: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -67,11 +108,11 @@ class _EditprofileState extends State<Editprofile> {
                 height: 35,
               ),
               TextField(
+                controller: lnameController,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.only(bottom: 3),
                   labelText: 'Last Name',
                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                  hintText: 'Mamji',
                   hintStyle: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -82,11 +123,11 @@ class _EditprofileState extends State<Editprofile> {
                 height: 35,
               ),
               TextField(
+                controller: addressController,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.only(bottom: 3),
                   labelText: 'Address',
                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                  hintText: 'A-28,Phase 8, Defence',
                   hintStyle: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -97,11 +138,11 @@ class _EditprofileState extends State<Editprofile> {
                 height: 35,
               ),
               TextField(
+                controller: phonenoController,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.only(bottom: 3),
                   labelText: 'Phone Number',
                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                  hintText: '03333818781',
                   hintStyle: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -112,11 +153,11 @@ class _EditprofileState extends State<Editprofile> {
                 height: 35,
               ),
               TextField(
+                controller: countryController,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.only(bottom: 3),
                   labelText: 'Country',
                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                  hintText: 'Pakistan',
                   hintStyle: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -127,11 +168,11 @@ class _EditprofileState extends State<Editprofile> {
                 height: 35,
               ),
               TextField(
+                controller: cityController,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.only(bottom: 3),
                   labelText: 'City',
                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                  hintText: 'Karachi',
                   hintStyle: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -142,11 +183,11 @@ class _EditprofileState extends State<Editprofile> {
                 height: 35,
               ),
               TextField(
+                controller: zipController,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.only(bottom: 3),
                   labelText: 'Zip Code',
                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                  hintText: '75950',
                   hintStyle: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -161,7 +202,9 @@ class _EditprofileState extends State<Editprofile> {
                     padding: EdgeInsets.symmetric(horizontal: 50),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                     child: Text(
                       'Cancel',
                       style: TextStyle(
@@ -171,19 +214,34 @@ class _EditprofileState extends State<Editprofile> {
                       ),
                     ),
                   ),
-                  RaisedButton(
-                    onPressed: () {},
-                    color: Colors.blue.shade900,
-                    padding: EdgeInsets.symmetric(horizontal: 50),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Text(
-                      'SAVE',
-                      style: TextStyle(
-                          fontSize: 14,
-                          letterSpacing: 2.2,
-                          color: Colors.white),
-                    ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                      db.collection('Users').doc(widget.uid).update({
+                        'fname': fnameController.text,
+                        'lname': lnameController.text,
+                        'address': addressController.text,
+                        'phoneno': phonenoController.text,
+                        'country': countryController.text,
+                        'city': cityController.text,
+                        'zip': zipController.text,
+                      });
+                    },
+                    child: Container(
+                        height: 30,
+                        child: Center(
+                          child: Text(
+                            'Save',
+                            style: TextStyle(
+                                fontSize: 14,
+                                letterSpacing: 2.2,
+                                color: Colors.white),
+                          ),
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 50),
+                        decoration: BoxDecoration(
+                            color: Colors.blue.shade900,
+                            borderRadius: BorderRadius.circular(20))),
                   ),
                 ],
               ),

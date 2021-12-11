@@ -21,27 +21,30 @@ class MyInfo extends StatelessWidget {
       this.dob})
       : super(key: key);
 
-  Card cardTile(title) {
+  Card cardTile(key, value) {
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: ListTile(
-        title: Text(title),
-      ),
-    );
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [Text(key), Text(value)],
+          ),
+        ));
   }
 
   @override
   Widget build(BuildContext context) {
-    List info = [
-      phone,
-      age,
-      dob,
-      address,
-      cnic,
-      country,
-      city,
-      zip,
-    ];
+    Map<String, dynamic> info = {
+      'Phone Number:': phone,
+      'Age:': age,
+      'Date of Birth:': dob,
+      'Address:': address,
+      'CNIC:': cnic,
+      'Country:': country,
+      'City:': city,
+      'Zip Code:': zip,
+    };
 
     return Scaffold(
         appBar: AppBar(
@@ -63,11 +66,18 @@ class MyInfo extends StatelessWidget {
             Container(
               height: 600,
               child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: info.length,
-                itemBuilder: (context, index) => cardTile(info[index]),
-              ),
-            )
+                  shrinkWrap: true,
+                  itemCount: info.length,
+                  itemBuilder: (context, index) {
+                    var keys = [];
+                    var values = [];
+                    info.forEach((key, value) {
+                      keys.add(key);
+                      values.add(value);
+                    });
+                    return cardTile(keys[index], values[index]);
+                  }),
+            ),
           ],
         )));
   }
