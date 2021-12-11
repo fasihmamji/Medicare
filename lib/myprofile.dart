@@ -2,7 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:testing_app/editprofile.dart';
+import 'package:testing_app/login.dart';
 import 'package:testing_app/myinfo.dart';
+import 'package:testing_app/settings.dart';
 
 class Myprofile extends StatefulWidget {
   @override
@@ -58,7 +61,14 @@ class _MyprofileState extends State<Myprofile> {
               style:
                   TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
           actions: [
-            IconButton(icon: Icon(Icons.more_horiz), onPressed: () {})
+            IconButton(
+                icon: Icon(Icons.more_horiz),
+                onPressed: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return Editprofile();
+                  }));
+                })
           ]),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -158,7 +168,7 @@ class _MyprofileState extends State<Myprofile> {
                   Container(
                     child: Column(
                       children: [
-                        cardTile(Icons.directions_walk, 'Contribution', () {}),
+                        cardTile(Icons.directions_walk, 'My Listing', () {}),
                         cardTile(Icons.info, 'Your Information', () {
                           Navigator.push(
                               context,
@@ -177,8 +187,18 @@ class _MyprofileState extends State<Myprofile> {
                                     );
                                   }));
                         }),
-                        cardTile(Icons.settings, 'Settings', () {}),
-                        cardTile(Icons.logout, 'Log Out', () {}),
+                        cardTile(Icons.settings, 'Settings', () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return Settingspass();
+                          }));
+                        }),
+                        cardTile(Icons.logout, 'Log Out', () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return Login();
+                          }));
+                        }),
                       ],
                     ),
                   ),
