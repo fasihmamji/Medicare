@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:testing_app/sign_up.dart';
-import 'update_password.dart';
+import 'package:testing_app/screens/sign_up.dart';
+import '../screens/update_password.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Inputwrapper extends StatefulWidget {

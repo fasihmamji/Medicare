@@ -2,12 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:testing_app/editprofile.dart';
-import 'package:testing_app/login.dart';
-import 'package:testing_app/myinfo.dart';
-import 'package:testing_app/settings.dart';
+import 'package:testing_app/screens/editprofile.dart';
+import 'package:testing_app/screens/myinfo.dart';
+import 'package:testing_app/screens/settings.dart';
 
 class Myprofile extends StatefulWidget {
+  const Myprofile({Key? key}) : super(key: key);
+
   @override
   State<Myprofile> createState() => _MyprofileState();
 }
@@ -23,8 +24,8 @@ class _MyprofileState extends State<Myprofile> {
     getUser();
   }
 
-  getUser() async {
-    var user = await auth.currentUser;
+  getUser() {
+    var user = auth.currentUser;
     setState(() {
       currentUser = user;
     });

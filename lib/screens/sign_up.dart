@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:testing_app/login.dart';
+import 'package:testing_app/screens/login.dart';
 
 class MySignUp extends StatefulWidget {
+  const MySignUp({Key? key}) : super(key: key);
+
 
   @override
   _MySignUpState createState() => _MySignUpState();

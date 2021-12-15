@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:testing_app/appdetails.dart';
-import 'package:testing_app/donations.dart';
-import 'package:testing_app/market.dart';
-import 'package:testing_app/myprofile.dart';
-import 'package:testing_app/recieved.dart';
-import 'package:testing_app/update_password.dart';
+import 'package:testing_app/screens/donations.dart';
+import 'package:testing_app/screens/market.dart';
+import 'package:testing_app/screens/myprofile.dart';
+import 'package:testing_app/screens/recieved.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+
   // const ({ Key? key }) : super(key: key);
 
   @override

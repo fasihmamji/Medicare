@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:testing_app/homescreen.dart';
-import 'package:testing_app/login.dart';
-import 'package:testing_app/update_password.dart';
+import 'package:testing_app/screens/homescreen.dart';
+import 'package:testing_app/screens/login.dart';
+import 'package:testing_app/screens/update_password.dart';
 
 class Authcheck extends StatelessWidget {
   FirebaseAuth auth = FirebaseAuth.instance;

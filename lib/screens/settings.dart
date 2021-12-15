@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Settingspass extends StatefulWidget {
+  const Settingspass({Key? key}) : super(key: key);
+
   @override
   _SettingspassState createState() => _SettingspassState();
 }
@@ -18,7 +20,7 @@ class _SettingspassState extends State<Settingspass> {
         elevation: 0,
         backgroundColor: Colors.blueGrey,
         automaticallyImplyLeading: true,
-        title: Text(
+        title: const Text(
           'Reset Password',
           style: TextStyle(fontSize: 30),
         ),

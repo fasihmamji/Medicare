@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:testing_app/homescreen.dart';
-import 'package:testing_app/myprofile.dart';
 
 class Editprofile extends StatefulWidget {
   final uid;
