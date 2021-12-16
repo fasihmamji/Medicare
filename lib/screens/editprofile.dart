@@ -1,7 +1,10 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Editprofile extends StatefulWidget {
+  // ignore: prefer_typing_uninitialized_variables
   final uid;
   final fname;
   final lname;
@@ -73,6 +76,7 @@ class _EditprofileState extends State<Editprofile> {
               Center(
                 child: Stack(
                   children: [
+                    // ignore: sized_box_for_whitespace
                     Container(
                       width: 130,
                       height: 130,
