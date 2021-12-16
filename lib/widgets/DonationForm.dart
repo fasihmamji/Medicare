@@ -16,6 +16,8 @@ class _DonationFormState extends State<DonationForm> {
   Object? selectedDosage;
   TextEditingController manufacturerController = TextEditingController();
   TextEditingController expiryController = TextEditingController();
+  TextEditingController quantityController = TextEditingController();
+
   User? currentUser;
 
   @override
@@ -38,6 +40,7 @@ class _DonationFormState extends State<DonationForm> {
         child: Scaffold(
             appBar: AppBar(
               automaticallyImplyLeading: true,
+              iconTheme: IconThemeData(color: Colors.black),
               centerTitle: true,
               elevation: 0,
               backgroundColor: Colors.transparent,
@@ -178,6 +181,21 @@ class _DonationFormState extends State<DonationForm> {
                                               ]),
                                             ),
                                             TextField(
+                                              decoration: InputDecoration(
+                                                fillColor: Colors.grey.shade200,
+                                                filled: true,
+                                                labelText: 'Quantity',
+                                                hintText: 'Quantity',
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                prefixIcon: const Icon(
+                                                    Icons.note_add),
+                                              ),
+                                              controller: quantityController,
+                                            ),
+                                            TextField(
                                               readOnly: true,
                                               decoration: InputDecoration(
                                                 fillColor: Colors.grey.shade200,
@@ -302,18 +320,22 @@ class _DonationFormState extends State<DonationForm> {
                                                       db
                                                           .collection(
                                                               'Donations')
-                                                          .doc(currentUser?.uid)
-                                                          .set({
+                                                          .add({
                                                         'medicine_name':
                                                             selectedName,
                                                         "medicine_dosage":
                                                             selectedDosage,
+                                                        "quantity":
+                                                            quantityController
+                                                                .text,
                                                         "manufacturing_date":
                                                             manufacturerController
                                                                 .text,
                                                         "expiry_date":
                                                             expiryController
-                                                                .text
+                                                                .text,
+                                                        "created_by":
+                                                            currentUser?.uid
                                                       });
                                                     },
                                                     child: Container(
