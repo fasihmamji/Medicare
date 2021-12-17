@@ -47,6 +47,7 @@ class MyInfo extends StatelessWidget {
     };
 
     return Scaffold(
+        backgroundColor: Colors.teal.shade900,
         appBar: AppBar(
           elevation: 0,
           iconTheme: IconThemeData(color: Colors.black),
@@ -60,7 +61,10 @@ class MyInfo extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Text(
                 'Your Information',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
             ),
             Container(

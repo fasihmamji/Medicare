@@ -31,6 +31,19 @@ class _DonationState extends State<Donation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          elevation: 0,
+          backgroundColor: Colors.teal.shade900,
+          title: Text(
+            'My Donation Listing',
+            style: TextStyle(
+              fontSize: 22,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -94,7 +107,8 @@ class _DonationState extends State<Donation> {
                             padding: const EdgeInsets.all(8.0),
                             child: Align(
                                 alignment: Alignment.centerLeft,
-                                child: Text('Donator: ${data['expiry_date']}')),
+                                child: Text(
+                                    'Donator: ${data['fname']}  ${data['lname']}')),
                           ),
                         ],
                       ),

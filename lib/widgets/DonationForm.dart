@@ -40,15 +40,15 @@ class _DonationFormState extends State<DonationForm> {
         child: Scaffold(
             appBar: AppBar(
               automaticallyImplyLeading: true,
-              iconTheme: IconThemeData(color: Colors.black),
+              iconTheme: IconThemeData(color: Colors.white),
               centerTitle: true,
               elevation: 0,
-              backgroundColor: Colors.transparent,
+              backgroundColor: Colors.teal,
               title: Text(
                 'Enter Medicine Details',
                 style: TextStyle(
                   fontSize: 22,
-                  color: Colors.black,
+                  color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -190,8 +190,8 @@ class _DonationFormState extends State<DonationForm> {
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             10)),
-                                                prefixIcon: const Icon(
-                                                    Icons.note_add),
+                                                prefixIcon:
+                                                    const Icon(Icons.note_add),
                                               ),
                                               controller: quantityController,
                                             ),

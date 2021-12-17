@@ -18,11 +18,11 @@ class _SettingspassState extends State<Settingspass> {
       appBar: AppBar(
         centerTitle: true,
         elevation: 0,
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: Colors.teal.shade900,
         automaticallyImplyLeading: true,
         title: const Text(
           'Reset Password',
-          style: TextStyle(fontSize: 30),
+          style: TextStyle(fontSize: 20),
         ),
       ),
       body: Stack(
@@ -45,9 +45,23 @@ class _SettingspassState extends State<Settingspass> {
           //         fontSize: 45),
           //   ),
           // ),
+          Padding(
+            padding: EdgeInsets.only(top: 150, left: 30),
+            child: Container(
+              child: Text(
+                "Enter Your Current Email",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.normal,
+                  fontSize: 20,
+                ),
+              ),
+            ),
+          ),
           Container(
             padding: EdgeInsets.only(
-              top: MediaQuery.of(context).size.height * 0.4,
+              top: 200,
+              // MediaQuery.of(context).size.height * 0.4,
               right: 35,
               left: 35,
             ),
@@ -71,7 +85,10 @@ class _SettingspassState extends State<Settingspass> {
                 Align(
                   alignment: Alignment.topCenter,
                   child: ElevatedButton(
-                    child:const Text(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.teal.shade900,
+                    ),
+                    child: const Text(
                       'Verify',
                       style: TextStyle(fontSize: 22),
                     ),

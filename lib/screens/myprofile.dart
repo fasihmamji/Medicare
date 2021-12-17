@@ -53,6 +53,7 @@ class _MyprofileState extends State<Myprofile> {
   Widget build(BuildContext context) {
     CollectionReference users = FirebaseFirestore.instance.collection('Users');
     return Scaffold(
+      backgroundColor: Colors.teal.shade900,
       appBar: AppBar(
           centerTitle: true,
           iconTheme: IconThemeData(color: Colors.black),
@@ -60,10 +61,15 @@ class _MyprofileState extends State<Myprofile> {
           elevation: 0,
           title: Text('Profile',
               style:
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
           actions: [
             TextButton(
-                child: Text('Log Out'),
+                child: Text(
+                  'Log Out',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
                 onPressed: () {
                   auth.signOut();
                 })
@@ -94,8 +100,12 @@ class _MyprofileState extends State<Myprofile> {
                   Column(
                     children: [
                       CircleAvatar(
+                        backgroundColor: Colors.teal.shade300,
                         radius: 40,
-                        child: Icon(Icons.verified_user),
+                        child: Icon(
+                          Icons.verified_user,
+                          color: Colors.white,
+                        ),
                       ),
                       SizedBox(
                         height: 10,
@@ -108,9 +118,11 @@ class _MyprofileState extends State<Myprofile> {
                             Text(
                               "${data['fname']} ${data['lname']}",
                               style: TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1),
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1,
+                                color: Colors.white,
+                              ),
                             ),
                           ],
                         ),
@@ -120,7 +132,7 @@ class _MyprofileState extends State<Myprofile> {
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
-                          color: Colors.grey.shade400,
+                          color: Colors.white,
                         ),
                       ),
                     ],
@@ -139,8 +151,16 @@ class _MyprofileState extends State<Myprofile> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Donated', style: TextStyle(fontSize: 15)),
-                        Text('Recieved', style: TextStyle(fontSize: 15)),
+                        Text('Donated',
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.white,
+                            )),
+                        Text('Recieved',
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.white,
+                            )),
                       ],
                     ),
                   ),

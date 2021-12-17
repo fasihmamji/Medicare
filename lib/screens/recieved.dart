@@ -16,37 +16,55 @@ class _RecievedState extends State<Recieved> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Container(
-          padding: const EdgeInsets.only(left: 16, right: 16),
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.blueGrey,
-              width: 3,
+        appBar: AppBar(
+          centerTitle: true,
+          elevation: 0,
+          backgroundColor: Colors.teal.shade900,
+          title: Text(
+            'My Recieving Listing',
+            style: TextStyle(
+              fontSize: 22,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
             ),
-            borderRadius: BorderRadius.circular(15),
           ),
-          child: DropdownButton(
-            hint: const Text('Select Item'),
-            dropdownColor: Colors.blueGrey,
-            icon: const Icon(Icons.arrow_drop_down),
-            iconSize: 30,
-            isExpanded: true,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 20,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.only(top: 5),
+          child: Container(
+            // padding: const EdgeInsets.only(left: 16, right: 16),
+            decoration: BoxDecoration(
+              color: Colors.teal.shade900,
+              border: Border.all(
+                color: Colors.teal.shade900,
+                width: 3,
+              ),
+              borderRadius: BorderRadius.zero,
             ),
-            value: valueChoose,
-            onChanged: (newValue) {
-              setState(() {
-                valueChoose = newValue as String;
-              });
-            },
-            items: listItem.map((valueItem) {
-              return DropdownMenuItem(
-                value: valueItem,
-                child: Text(valueItem),
-              );
-            }).toList(),
+            child: DropdownButton(
+              hint: const Text('Select Item',
+                  style: TextStyle(color: Colors.white)),
+              dropdownColor: Colors.teal.shade900,
+              icon: const Icon(Icons.arrow_drop_down, color: Colors.white),
+              iconSize: 30,
+              isExpanded: true,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+              ),
+              value: valueChoose,
+              onChanged: (newValue) {
+                setState(() {
+                  valueChoose = newValue as String;
+                });
+              },
+              items: listItem.map((valueItem) {
+                return DropdownMenuItem(
+                  value: valueItem,
+                  child: Text(valueItem),
+                );
+              }).toList(),
+            ),
           ),
         ),
       ),

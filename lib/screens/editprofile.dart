@@ -55,7 +55,7 @@ class _EditprofileState extends State<Editprofile> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: Colors.teal.shade900,
         elevation: 0,
         title: Text('Update Profile'),
       ),
@@ -82,7 +82,7 @@ class _EditprofileState extends State<Editprofile> {
                       height: 130,
                       child: CircleAvatar(
                         radius: 60,
-                        backgroundColor: Colors.blueGrey,
+                        backgroundColor: Colors.teal.shade900,
                         child: Center(
                           child: Icon(Icons.verified_user),
                         ),
@@ -242,7 +242,7 @@ class _EditprofileState extends State<Editprofile> {
                         ),
                         padding: EdgeInsets.symmetric(horizontal: 50),
                         decoration: BoxDecoration(
-                            color: Colors.blue.shade900,
+                            color: Colors.teal,
                             borderRadius: BorderRadius.circular(20))),
                   ),
                 ],
