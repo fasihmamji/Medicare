@@ -1,16 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Recieved extends StatefulWidget {
-  const Recieved({Key? key}) : super(key: key);
+  final User? currentUser;
+
+  const Recieved({Key? key, this.currentUser}) : super(key: key);
 
   @override
   State<Recieved> createState() => _RecievedState();
 }
 
 class _RecievedState extends State<Recieved> {
-  String? valueChoose;
-
-  List listItem = ["Item 1", "Item 2", "Item 3", "Item 4", "Item 5"];
+  FirebaseFirestore db = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -29,43 +31,50 @@ class _RecievedState extends State<Recieved> {
             ),
           ),
         ),
-        body: Padding(
-          padding: const EdgeInsets.only(top: 5),
-          child: Container(
-            // padding: const EdgeInsets.only(left: 16, right: 16),
-            decoration: BoxDecoration(
-              color: Colors.teal.shade900,
-              border: Border.all(
-                color: Colors.teal.shade900,
-                width: 3,
-              ),
-              borderRadius: BorderRadius.zero,
-            ),
-            child: DropdownButton(
-              hint: const Text('Select Item',
-                  style: TextStyle(color: Colors.white)),
-              dropdownColor: Colors.teal.shade900,
-              icon: const Icon(Icons.arrow_drop_down, color: Colors.white),
-              iconSize: 30,
-              isExpanded: true,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-              ),
-              value: valueChoose,
-              onChanged: (newValue) {
-                setState(() {
-                  valueChoose = newValue as String;
+        body: StreamBuilder<QuerySnapshot>(
+          stream: db.collection('Donations').snapshots(),
+          builder: (context, medicineSnapshot) {
+            if (medicineSnapshot.hasError)
+              return Center(
+                child: Text('error'),
+              );
+            if (medicineSnapshot.data == null)
+              return Center(
+                child: Text('data null'),
+              );
+            if (medicineSnapshot.data!.docs.isEmpty) {
+              return Center(child: Text('No donated medicines'));
+            }
+            if (medicineSnapshot.connectionState == ConnectionState.waiting)
+              return Center(child: Text('waiting'));
+            List<Map<String, dynamic>?> userReqs = [];
+            medicineSnapshot.data!.docs.forEach((doc) async {
+              await db
+                  .collection('Donations')
+                  .doc(doc.id)
+                  .collection('Requests')
+                  .doc(widget.currentUser?.uid)
+                  .get()
+                  .then((doc) {
+                if (doc.exists) {
+                  userReqs.add(doc.data());
+                }
+              });
+            });
+
+            return ListView.builder(
+                itemCount: userReqs.length,
+                itemBuilder: (context, index) {
+                  Map<String, dynamic> requested =
+                      userReqs[index] as Map<String, dynamic>;
+                  print(requested);
+
+                  return Text(
+                    '01',
+                    style: TextStyle(color: Colors.black),
+                  );
                 });
-              },
-              items: listItem.map((valueItem) {
-                return DropdownMenuItem(
-                  value: valueItem,
-                  child: Text(valueItem),
-                );
-              }).toList(),
-            ),
-          ),
+          },
         ),
       ),
     );
