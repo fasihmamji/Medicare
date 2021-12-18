@@ -318,6 +318,8 @@ class _DonationFormState extends State<DonationForm> {
                                                   child: GestureDetector(
                                                     onTap: () {
                                                       db
+                                                          .collection('Users')
+                                                          .doc(currentUser?.uid)
                                                           .collection(
                                                               'Donations')
                                                           .add({
@@ -335,20 +337,32 @@ class _DonationFormState extends State<DonationForm> {
                                                             expiryController
                                                                 .text,
                                                         "created_by":
-                                                            currentUser?.uid
+                                                            currentUser?.uid,
                                                       }).then((value) {
                                                         db
                                                             .collection(
-                                                                'Donations')
+                                                                'Market')
                                                             .doc(value.id)
-                                                            .collection(
-                                                                'Requests')
-                                                            .add({
-                                                          "dummy": true
+                                                            .set({
+                                                          'medicine_name':
+                                                              selectedName,
+                                                          "medicine_dosage":
+                                                              selectedDosage,
+                                                          "quantity": int.parse(
+                                                              quantityController
+                                                                  .text),
+                                                          "manufacturing_date":
+                                                              manufacturerController
+                                                                  .text,
+                                                          "expiry_date":
+                                                              expiryController
+                                                                  .text,
+                                                          "created_by":
+                                                              currentUser?.uid
                                                         });
-                                                      }).then((value) {
-                                                        Navigator.pop(context);
-                                                      });
+                                                      }).then((value) =>
+                                                              Navigator.pop(
+                                                                  context));
                                                     },
                                                     child: Container(
                                                         height: 30,

@@ -45,8 +45,9 @@ class _DonationState extends State<Donation> {
         ),
         body: StreamBuilder<QuerySnapshot>(
           stream: db
+              .collection('Users')
+              .doc(widget.currentUser?.uid)
               .collection('Donations')
-              .where("created_by", isEqualTo: widget.currentUser?.uid)
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError)
@@ -74,7 +75,18 @@ class _DonationState extends State<Donation> {
                       child: ExpansionTile(
                         trailing: IconButton(
                           onPressed: () {
-                            db.collection('Donations').doc(doc.id).delete();
+                            db
+                                .collection('Market')
+                                .doc(data['market_ref'])
+                                .delete()
+                                .then((value) {
+                              db
+                                  .collection('Users')
+                                  .doc(widget.currentUser?.uid)
+                                  .collection('Donations')
+                                  .doc(doc.id)
+                                  .delete();
+                            });
                           },
                           icon: Icon(Icons.delete),
                         ),

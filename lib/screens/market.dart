@@ -74,9 +74,9 @@ class _MarketState extends State<Market> {
         ),
         body: StreamBuilder<QuerySnapshot>(
           stream: query == ''
-              ? db.collection('Donations').snapshots()
+              ? db.collection('Market').snapshots()
               : db
-                  .collection('Donations')
+                  .collection('Market')
                   .where('medicine_name', isEqualTo: query)
                   .snapshots(),
           builder: (context, medicineSnapshot) {
@@ -102,7 +102,7 @@ class _MarketState extends State<Market> {
                       doc.data() as Map<String, dynamic>;
 
                   return Padding(
-                    padding: const EdgeInsets.all(18.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: Card(
                       child: ExpansionTile(
                         title: Text(medicineData['medicine_name']),
@@ -172,10 +172,10 @@ class _MarketState extends State<Market> {
                                                   );
                                                 }).then((value) {
                                               db
-                                                  .collection('Donations')
-                                                  .doc(doc.id)
-                                                  .collection('Requests')
+                                                  .collection('Users')
                                                   .doc(widget.currentUser?.uid)
+                                                  .collection('Requests')
+                                                  .doc(doc.id)
                                                   .set({
                                                 "donator_id":
                                                     medicineData['created_by'],
@@ -183,8 +183,9 @@ class _MarketState extends State<Market> {
                                                     '${userData['fname']} ${userData['lname']}',
                                                 "quantity":
                                                     medicineData['quantity'],
-                                                "medicine_by": medicineData[
+                                                "medicine_name": medicineData[
                                                     'medicine_name'],
+                                                
                                                 // "requested_by":
                                                 //     currentUser?.uid,
                                                 "requested_on": DateTime.now()

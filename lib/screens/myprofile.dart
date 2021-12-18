@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:testing_app/screens/editprofile.dart';
 import 'package:testing_app/screens/myinfo.dart';
 import 'package:testing_app/screens/settings.dart';
+import 'package:testing_app/screens/transactions.dart';
 
 class Myprofile extends StatefulWidget {
   final User? currentUser;
@@ -176,7 +177,13 @@ class _MyprofileState extends State<Myprofile> {
                   Container(
                     child: Column(
                       children: [
-                        cardTile(Icons.directions_walk, 'My Listing', () {}),
+                        cardTile(Icons.directions_walk, 'Your Transactions',
+                            () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return Transactions(currentUser: widget.currentUser,);
+                          }));
+                        }),
                         cardTile(Icons.info, 'Your Information', () {
                           Navigator.push(
                               context,

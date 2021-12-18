@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class Recieved extends StatefulWidget {
   final User? currentUser;
@@ -32,48 +33,136 @@ class _RecievedState extends State<Recieved> {
           ),
         ),
         body: StreamBuilder<QuerySnapshot>(
-          stream: db.collection('Donations').snapshots(),
-          builder: (context, medicineSnapshot) {
-            if (medicineSnapshot.hasError)
+          stream: db
+              .collection('Users')
+              .doc(widget.currentUser?.uid)
+              .collection('Requests')
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError)
               return Center(
                 child: Text('error'),
               );
-            if (medicineSnapshot.data == null)
+            if (snapshot.data == null)
               return Center(
                 child: Text('data null'),
               );
-            if (medicineSnapshot.data!.docs.isEmpty) {
+            if (snapshot.data!.docs.isEmpty) {
               return Center(child: Text('No donated medicines'));
             }
-            if (medicineSnapshot.connectionState == ConnectionState.waiting)
+            if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: Text('waiting'));
-            List<Map<String, dynamic>?> userReqs = [];
-            medicineSnapshot.data!.docs.forEach((doc) async {
-              await db
-                  .collection('Donations')
-                  .doc(doc.id)
-                  .collection('Requests')
-                  .doc(widget.currentUser?.uid)
-                  .get()
-                  .then((doc) {
-                if (doc.exists) {
-                  userReqs.add(doc.data());
-                }
-              });
-            });
-
-            return ListView.builder(
-                itemCount: userReqs.length,
+            } else {
+              return ListView.builder(
+                itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
-                  Map<String, dynamic> requested =
-                      userReqs[index] as Map<String, dynamic>;
-                  print(requested);
+                  DocumentSnapshot doc = snapshot.data!.docs[index];
 
-                  return Text(
-                    '01',
-                    style: TextStyle(color: Colors.black),
+                  Map<String, dynamic> data =
+                      doc.data() as Map<String, dynamic>;
+                  DateTime date = data['requested_on'].toDate();
+                  var format = DateFormat('dd-MM-yyyy ');
+
+                  return Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Card(
+                        child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: <BoxShadow>[
+                            BoxShadow(
+                                color: Colors.grey,
+                                offset: const Offset(2.0, 4.0),
+                                blurRadius: 4),
+                          ],
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text('Medicine Name: '),
+                                    Text(data['medicine_name']),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text('Requested On: '),
+                                    Text(format.format(date)),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text('Donator: '),
+                                    Text(data['donator_name']),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text('Quantity: '),
+                                    Text(data['quantity'].toString()),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    IconButton(
+                                        icon: Icon(Icons.done),
+                                        onPressed: () {
+                                          db.collection('Transactions').add({
+                                            "medicine_name":
+                                                data['medicine_name'],
+                                            "quantity": data['quantity'],
+                                            "donor_id": data['donator_id'],
+                                            "reciever_id":
+                                                widget.currentUser?.uid,
+                                            "transaction_date": DateTime.now()
+                                          }).then((value) {
+                                            db
+                                                .collection('Users')
+                                                .doc(widget.currentUser?.uid)
+                                                .collection('Requests')
+                                                .doc(doc.id)
+                                                .delete();
+                                          }).then((value) {
+                                            db
+                                                .collection('Market')
+                                                .doc(doc.id)
+                                                .delete();
+                                          });
+                                        }),
+                                    IconButton(
+                                        icon: Icon(Icons.clear),
+                                        onPressed: () {
+                                          db
+                                              .collection('Users')
+                                              .doc(widget.currentUser?.uid)
+                                              .collection('Requests')
+                                              .doc(doc.id)
+                                              .delete();
+                                        }),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    )),
                   );
-                });
+                },
+              );
+            }
           },
         ),
       ),
