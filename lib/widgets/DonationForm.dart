@@ -325,9 +325,9 @@ class _DonationFormState extends State<DonationForm> {
                                                             selectedName,
                                                         "medicine_dosage":
                                                             selectedDosage,
-                                                        "quantity":
+                                                        "quantity": int.parse(
                                                             quantityController
-                                                                .text,
+                                                                .text),
                                                         "manufacturing_date":
                                                             manufacturerController
                                                                 .text,
@@ -336,6 +336,18 @@ class _DonationFormState extends State<DonationForm> {
                                                                 .text,
                                                         "created_by":
                                                             currentUser?.uid
+                                                      }).then((value) {
+                                                        db
+                                                            .collection(
+                                                                'Donations')
+                                                            .doc(value.id)
+                                                            .collection(
+                                                                'Requests')
+                                                            .add({
+                                                          "dummy": true
+                                                        });
+                                                      }).then((value) {
+                                                        Navigator.pop(context);
                                                       });
                                                     },
                                                     child: Container(

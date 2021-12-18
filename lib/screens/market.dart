@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Market extends StatefulWidget {
+  final User? currentUser;
+
+  const Market({Key? key, this.currentUser}) : super(key: key);
   @override
   State<Market> createState() => _MarketState();
 }
@@ -12,26 +15,15 @@ class _MarketState extends State<Market> {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
   FirebaseAuth auth = FirebaseAuth.instance;
-  Map<String, dynamic>? currentUser;
-  @override
-  void initState() {
-    super.initState();
-    getUser();
-  }
+  String query = '';
+  TextEditingController queryController = TextEditingController();
+  bool isRequested = false;
 
+  TextEditingController quantityController = TextEditingController();
+  String quantity = '';
 
-  getUser() async {
-    var user = auth.currentUser;
-    var userData = await db.collection('Users').doc(user?.uid).get();
-    var data = userData.data() as Map<String, dynamic>;
-
-    setState(() {
-      currentUser = {
-        "uid": user?.uid,
-        "name": "${data['fname']} ${data['lname']}"
-      };
-    });
-  }
+  bool isValid = false;
+  String? error = null;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +34,12 @@ class _MarketState extends State<Market> {
           title: !isSearching
               ? Text('All Medicines')
               : TextField(
+                  controller: queryController,
+                  onChanged: (val) {
+                    setState(() {
+                      query = val;
+                    });
+                  },
                   style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     icon: Icon(
@@ -59,6 +57,8 @@ class _MarketState extends State<Market> {
                     onPressed: () {
                       setState(() {
                         this.isSearching = false;
+                        queryController.clear();
+                        query = '';
                       });
                     },
                   )
@@ -73,66 +73,139 @@ class _MarketState extends State<Market> {
           ],
         ),
         body: StreamBuilder<QuerySnapshot>(
-          stream: db.collection('Donations').snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError)
+          stream: query == ''
+              ? db.collection('Donations').snapshots()
+              : db
+                  .collection('Donations')
+                  .where('medicine_name', isEqualTo: query)
+                  .snapshots(),
+          builder: (context, medicineSnapshot) {
+            if (medicineSnapshot.hasError)
               return Center(
                 child: CircularProgressIndicator(),
               );
-            if (snapshot.data == null)
+            if (medicineSnapshot.data == null)
               return Center(
                 child: CircularProgressIndicator(),
               );
-            if (snapshot.data!.docs.isEmpty) {
+            if (medicineSnapshot.data!.docs.isEmpty) {
               return Center(child: Text('No donated medicines'));
             }
-            if (snapshot.connectionState == ConnectionState.waiting)
+            if (medicineSnapshot.connectionState == ConnectionState.waiting)
               return Center(child: CircularProgressIndicator());
             return ListView.builder(
-                itemCount: snapshot.data!.docs.length,
+                itemCount: medicineSnapshot.data!.docs.length,
                 itemBuilder: (context, index) {
-                  DocumentSnapshot doc = snapshot.data!.docs[index];
+                  DocumentSnapshot doc = medicineSnapshot.data!.docs[index];
 
-                  Map<String, dynamic> data =
+                  Map<String, dynamic> medicineData =
                       doc.data() as Map<String, dynamic>;
 
                   return Padding(
                     padding: const EdgeInsets.all(18.0),
                     child: Card(
                       child: ExpansionTile(
-                        title: Text(data['medicine_name']),
-                        subtitle: Text('Quantity: ${data['quantity']}'),
+                        title: Text(medicineData['medicine_name']),
+                        subtitle: Text(
+                            'Quantity: ${medicineData['quantity'].toString()}'),
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                    'Manufactured: ${data['manufacturing_date']}')),
+                                    'Manufactured: ${medicineData['manufacturing_date']}')),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Align(
                                 alignment: Alignment.centerLeft,
-                                child: Text('Expiry: ${data['expiry_date']}')),
+                                child: Text(
+                                    'Expiry: ${medicineData['expiry_date']}')),
                           ),
                           FutureBuilder<DocumentSnapshot>(
                             future: db
                                 .collection('Users')
-                                .doc(data['created_by'])
+                                .doc(medicineData['created_by'])
                                 .get(),
-                            builder: (context, snapshot) {
-                              if (!snapshot.hasData) {
-                                return Container();
+                            builder: (context, userSnapshot) {
+                              if (!userSnapshot.hasData) {
+                                return Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text('Loading...'));
                               } else {
-                                var data = snapshot.data!.data()
+                                var userData = userSnapshot.data!.data()
                                     as Map<String, dynamic>;
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                          'Donated by: ${data['fname']} ${data['lname']} ')),
+                                return Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                              'Donated by: ${userData['fname']} ${userData['lname']} ')),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    title: Text('Contact'),
+                                                    content: Text(
+                                                        '${userData['phoneno']}'),
+                                                    actions: [
+                                                      TextButton(
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          child: Text('OK'))
+                                                    ],
+                                                  );
+                                                }).then((value) {
+                                              db
+                                                  .collection('Donations')
+                                                  .doc(doc.id)
+                                                  .collection('Requests')
+                                                  .doc(widget.currentUser?.uid)
+                                                  .set({
+                                                "donator_id":
+                                                    medicineData['created_by'],
+                                                "donator_name":
+                                                    '${userData['fname']} ${userData['lname']}',
+                                                "quantity":
+                                                    medicineData['quantity'],
+                                                "medicine_by": medicineData[
+                                                    'medicine_name'],
+                                                // "requested_by":
+                                                //     currentUser?.uid,
+                                                "requested_on": DateTime.now()
+                                              });
+                                            });
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.all(5),
+                                            child: Text(
+                                              'Request',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: Colors.teal.shade900,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 );
                               }
                             },

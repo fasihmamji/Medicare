@@ -7,7 +7,8 @@ import 'package:testing_app/screens/myinfo.dart';
 import 'package:testing_app/screens/settings.dart';
 
 class Myprofile extends StatefulWidget {
-  const Myprofile({Key? key}) : super(key: key);
+  final User? currentUser;
+  const Myprofile({Key? key, this.currentUser}) : super(key: key);
 
   @override
   State<Myprofile> createState() => _MyprofileState();
@@ -16,20 +17,6 @@ class Myprofile extends StatefulWidget {
 class _MyprofileState extends State<Myprofile> {
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  User? currentUser;
-
-  @override
-  void initState() {
-    super.initState();
-    getUser();
-  }
-
-  getUser() {
-    var user = auth.currentUser;
-    setState(() {
-      currentUser = user;
-    });
-  }
 
   Card cardTile(leading, title, onTap) {
     return Card(
@@ -77,7 +64,7 @@ class _MyprofileState extends State<Myprofile> {
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: StreamBuilder<DocumentSnapshot>(
-          stream: users.doc(currentUser?.uid).snapshots(),
+          stream: users.doc(widget.currentUser?.uid).snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
             if (snapshot.hasError) {
@@ -212,7 +199,7 @@ class _MyprofileState extends State<Myprofile> {
                           Navigator.of(context)
                               .push(MaterialPageRoute(builder: (context) {
                             return Editprofile(
-                              uid: currentUser?.uid,
+                              uid: widget.currentUser?.uid,
                               fname: data['fname'],
                               lname: data['lname'],
                               address: data['address'],

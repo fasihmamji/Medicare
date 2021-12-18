@@ -6,6 +6,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Donation extends StatefulWidget {
+  final User? currentUser;
+
+  const Donation({Key? key, this.currentUser}) : super(key: key);
+
   @override
   State<Donation> createState() => _DonationState();
 }
@@ -14,19 +18,6 @@ class _DonationState extends State<Donation> {
   FirebaseAuth auth = FirebaseAuth.instance;
 
   FirebaseFirestore db = FirebaseFirestore.instance;
-  User? currentUser;
-  @override
-  void initState() {
-    super.initState();
-    getUser();
-  }
-
-  getUser() {
-    var user = auth.currentUser;
-    setState(() {
-      currentUser = user;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +46,7 @@ class _DonationState extends State<Donation> {
         body: StreamBuilder<QuerySnapshot>(
           stream: db
               .collection('Donations')
-              .where("created_by", isEqualTo: currentUser?.uid)
+              .where("created_by", isEqualTo: widget.currentUser?.uid)
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError)
@@ -78,7 +69,7 @@ class _DonationState extends State<Donation> {
                   Map<String, dynamic> data =
                       doc.data() as Map<String, dynamic>;
                   return Padding(
-                    padding: const EdgeInsets.all(18.0),
+                    padding: const EdgeInsets.all(12.0),
                     child: Card(
                       child: ExpansionTile(
                         trailing: IconButton(
@@ -88,7 +79,8 @@ class _DonationState extends State<Donation> {
                           icon: Icon(Icons.delete),
                         ),
                         title: Text(data['medicine_name']),
-                        subtitle: Text('Quantity: ${data['quantity']}'),
+                        subtitle:
+                            Text('Quantity: ${data['quantity'].toString()}'),
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(8.0),

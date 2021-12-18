@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:testing_app/screens/donations.dart';
 import 'package:testing_app/screens/market.dart';
@@ -14,10 +15,44 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  FirebaseAuth auth = FirebaseAuth.instance;
+
   int selectedIndex = 0;
-  var pages = [Market(), Donation(), Recieved(), Myprofile()];
+  User? currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+    getUser();
+  }
+
+  getUser() async {
+    var user = auth.currentUser;
+    // var userData = await db.collection('Users').doc(user?.uid).get();
+    // var data = userData.data() as Map<String, dynamic>;
+
+    setState(() {
+      currentUser = user;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    var pages = [
+      Market(
+        currentUser: currentUser,
+      ),
+      Donation(
+        currentUser: currentUser,
+      ),
+      Recieved(
+        currentUser: currentUser,
+      ),
+      Myprofile(
+        currentUser: currentUser,
+      )
+    ];
+
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
           onTap: (index) {
