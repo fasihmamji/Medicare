@@ -13,15 +13,6 @@ class Transactions extends StatefulWidget {
 
 class _TransactionsState extends State<Transactions> {
   FirebaseFirestore db = FirebaseFirestore.instance;
-
-  var donar;
-  var reciever;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,6 +38,8 @@ class _TransactionsState extends State<Transactions> {
           if (snapshot.connectionState == ConnectionState.waiting)
             return Center(child: CircularProgressIndicator());
           var userTransaction = [];
+          var donar;
+          var reciever;
 
           snapshot.data!.docs.forEach((doc) {
             var data = doc.data() as Map<String, dynamic>;

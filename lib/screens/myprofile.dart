@@ -41,7 +41,7 @@ class _MyprofileState extends State<Myprofile> {
   Widget build(BuildContext context) {
     CollectionReference users = FirebaseFirestore.instance.collection('Users');
     return Scaffold(
-      backgroundColor: Colors.teal.shade900,
+      backgroundColor: Color(0xfff9f7fb),
       appBar: AppBar(
           centerTitle: true,
           iconTheme: IconThemeData(color: Colors.black),
@@ -49,13 +49,13 @@ class _MyprofileState extends State<Myprofile> {
           elevation: 0,
           title: Text('Profile',
               style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
           actions: [
             TextButton(
                 child: Text(
                   'Log Out',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
                   ),
                 ),
                 onPressed: () {
@@ -83,16 +83,17 @@ class _MyprofileState extends State<Myprofile> {
             } else {
               Map<String, dynamic> data =
                   snapshot.data!.data() as Map<String, dynamic>;
+
               return ListView(
                 children: [
                   Column(
                     children: [
                       CircleAvatar(
-                        backgroundColor: Colors.teal.shade300,
+                        backgroundColor: Colors.teal.shade700,
                         radius: 40,
                         child: Icon(
                           Icons.verified_user,
-                          color: Colors.white,
+                          color: Colors.black,
                         ),
                       ),
                       SizedBox(
@@ -109,7 +110,7 @@ class _MyprofileState extends State<Myprofile> {
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 1,
-                                color: Colors.white,
+                                color: Colors.black,
                               ),
                             ),
                           ],
@@ -120,7 +121,7 @@ class _MyprofileState extends State<Myprofile> {
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: Colors.grey.shade400,
                         ),
                       ),
                     ],
@@ -131,7 +132,7 @@ class _MyprofileState extends State<Myprofile> {
                       height: 20,
                       indent: 20,
                       endIndent: 20,
-                      color: Colors.grey.shade100,
+                      color: Colors.grey.shade500,
                     ),
                   ),
                   Padding(
@@ -141,36 +142,57 @@ class _MyprofileState extends State<Myprofile> {
                       children: [
                         Text('Donated',
                             style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.white,
-                            )),
+                                fontSize: 15,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600)),
                         Text('Recieved',
                             style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.white,
-                            )),
+                                fontSize: 15,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600)),
                       ],
                     ),
                   ),
                   SizedBox(
                     height: 3,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 36),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15),
-                          child: Text('10'),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 20.0),
-                          child: Text('5'),
-                        ),
-                      ],
-                    ),
-                  ),
+                  FutureBuilder<QuerySnapshot>(
+                      future: firestore.collection('Transactions').get(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Align(
+                              alignment: Alignment.center,
+                              child: Text('Loading...'));
+                        }
+                        var donated = 0;
+                        var recieved = 0;
+                        snapshot.data!.docs.forEach((doc) {
+                          var data = doc.data() as Map<String, dynamic>;
+                          if (data['donor_id'] == widget.currentUser?.uid) {
+                            donated++;
+                          } else if (data['reciever_id'] ==
+                              widget.currentUser?.uid) {
+                            recieved++;
+                          }
+                        });
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 36),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 24),
+                                child: Text(donated.toString()),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 24),
+                                child: Text(recieved.toString()),
+                              )
+                            ],
+                          ),
+                        );
+                      }),
                   SizedBox(
                     height: 55,
                   ),
@@ -181,7 +203,9 @@ class _MyprofileState extends State<Myprofile> {
                             () {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
-                            return Transactions(currentUser: widget.currentUser,);
+                            return Transactions(
+                              currentUser: widget.currentUser,
+                            );
                           }));
                         }),
                         cardTile(Icons.info, 'Your Information', () {

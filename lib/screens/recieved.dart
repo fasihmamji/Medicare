@@ -41,17 +41,17 @@ class _RecievedState extends State<Recieved> {
           builder: (context, snapshot) {
             if (snapshot.hasError)
               return Center(
-                child: Text('error'),
+                child: Text('No Medicines Requested yet'),
               );
             if (snapshot.data == null)
               return Center(
-                child: Text('data null'),
+                child: Text('No Medicines Requested yet'),
               );
             if (snapshot.data!.docs.isEmpty) {
-              return Center(child: Text('No Medicine Request'));
+              return Center(child: Text('No Medicines Requested yet'));
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: Text('waiting'));
+              return Center(child: Text('No Medicines Requested yet'));
             } else {
               return ListView.builder(
                 itemCount: snapshot.data!.docs.length,
@@ -66,96 +66,115 @@ class _RecievedState extends State<Recieved> {
                   return Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Card(
-                        child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: <BoxShadow>[
-                            BoxShadow(
-                                color: Colors.grey,
-                                offset: const Offset(2.0, 4.0),
-                                blurRadius: 4),
-                          ],
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text('Medicine Name: '),
-                                    Text(data['medicine_name']),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text('Requested On: '),
-                                    Text(format.format(date)),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text('Donator: '),
-                                    Text(data['donator_name']),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text('Quantity: '),
-                                    Text(data['quantity'].toString()),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    IconButton(
-                                        icon: Icon(Icons.done),
-                                        onPressed: () {
-                                          db.collection('Transactions').add({
-                                            "medicine_name":
-                                                data['medicine_name'],
-                                            "quantity": data['quantity'],
-                                            "donor_id": data['donator_id'],
-                                            "reciever_id":
-                                                widget.currentUser?.uid,
-                                            "transaction_date": DateTime.now()
-                                          }).then((value) {
+                        child: Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: <BoxShadow>[
+                              BoxShadow(
+                                  color: Colors.grey,
+                                  offset: const Offset(2.0, 4.0),
+                                  blurRadius: 4),
+                            ],
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text('Medicine Name: '),
+                                      Text(data['medicine_name']),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text('Requested On: '),
+                                      Text(format.format(date)),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text('Donator: '),
+                                      Text(data['donator_name']),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text('Quantity: '),
+                                      Text(data['quantity'].toString()),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      GestureDetector(
+                                          child: Icon(Icons.done),
+                                          onTap: () {
+                                            db.collection('Transactions').add({
+                                              "medicine_name":
+                                                  data['medicine_name'],
+                                              "quantity": data['quantity'],
+                                              "donor_id": data['donator_id'],
+                                              "reciever_id":
+                                                  widget.currentUser?.uid,
+                                              "transaction_date": DateTime.now()
+                                            }).then((value) {
+                                              db
+                                                  .collection('Users')
+                                                  .doc(widget.currentUser?.uid)
+                                                  .collection('Requests')
+                                                  .doc(doc.id)
+                                                  .delete();
+                                            }).then((value) {
+                                              db
+                                                  .collection('Market')
+                                                  .doc(doc.id)
+                                                  .delete();
+                                            });
+                                          }),
+                                      GestureDetector(
+                                          child: Icon(Icons.clear),
+                                          onTap: () {
                                             db
                                                 .collection('Users')
-                                                .doc(widget.currentUser?.uid)
-                                                .collection('Requests')
+                                                .doc(data['donator_id'])
+                                                .collection('Donations')
                                                 .doc(doc.id)
-                                                .delete();
-                                          }).then((value) {
-                                            db
-                                                .collection('Market')
-                                                .doc(doc.id)
-                                                .delete();
-                                          });
-                                        }),
-                                    IconButton(
-                                        icon: Icon(Icons.clear),
-                                        onPressed: () {
-                                          db
-                                              .collection('Users')
-                                              .doc(widget.currentUser?.uid)
-                                              .collection('Requests')
-                                              .doc(doc.id)
-                                              .delete();
-                                        }),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
+                                                .update({
+                                              "requested_by": null
+                                            }).then((value) {
+                                              db
+                                                  .collection('Market')
+                                                  .doc(doc.id)
+                                                  .update({
+                                                "requested_by": null
+                                              }).then((value) {
+                                                db
+                                                    .collection('Users')
+                                                    .doc(
+                                                        widget.currentUser?.uid)
+                                                    .collection('Requests')
+                                                    .doc(doc.id)
+                                                    .delete();
+                                              });
+                                            });
+                                          }),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     )),

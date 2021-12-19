@@ -54,17 +54,15 @@ class _DonationState extends State<Donation> {
           builder: (context, snapshot) {
             if (snapshot.hasError)
               return Center(
-                child: CircularProgressIndicator(),
+                child: Text('Error loading Medicines'),
               );
             if (snapshot.data == null)
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+              return Center(child: Text('No Donated Medicines'));
             if (snapshot.data!.docs.isEmpty) {
               return Center(child: Text('No Donated Medicines'));
             }
             if (snapshot.connectionState == ConnectionState.waiting)
-              return Center(child: CircularProgressIndicator());
+              return Center(child: Text('Fetching Medicines'));
             return ListView.builder(
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
@@ -75,11 +73,11 @@ class _DonationState extends State<Donation> {
                     padding: const EdgeInsets.all(12.0),
                     child: Card(
                       child: ExpansionTile(
-                        trailing: IconButton(
-                          onPressed: () {
+                        trailing: GestureDetector(
+                          onTap: () {
                             db
                                 .collection('Market')
-                                .doc(data['market_ref'])
+                                .doc(doc.id)
                                 .delete()
                                 .then((value) {
                               db
@@ -88,9 +86,18 @@ class _DonationState extends State<Donation> {
                                   .collection('Donations')
                                   .doc(doc.id)
                                   .delete();
+                            }).then((value) {
+                              if (data['requested_by'] != null) {
+                                db
+                                    .collection('Users')
+                                    .doc(data['requested_by'])
+                                    .collection('Requests')
+                                    .doc(doc.id)
+                                    .delete();
+                              }
                             });
                           },
-                          icon: Icon(Icons.delete),
+                          child: Icon(Icons.delete),
                         ),
                         title: Text(data['medicine_name']),
                         subtitle:
@@ -108,13 +115,6 @@ class _DonationState extends State<Donation> {
                             child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text('Expiry: ${data['expiry_date']}')),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                    'Donator: ${data['fname']}  ${data['lname']}')),
                           ),
                         ],
                       ),

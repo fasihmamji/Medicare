@@ -82,17 +82,17 @@ class _MarketState extends State<Market> {
           builder: (context, medicineSnapshot) {
             if (medicineSnapshot.hasError)
               return Center(
-                child: CircularProgressIndicator(),
+                child: Text('Error loading medicines'),
               );
             if (medicineSnapshot.data == null)
               return Center(
-                child: CircularProgressIndicator(),
+                child: Text('No Donated Medicines'),
               );
             if (medicineSnapshot.data!.docs.isEmpty) {
               return Center(child: Text('No Donated Medicines'));
             }
             if (medicineSnapshot.connectionState == ConnectionState.waiting)
-              return Center(child: CircularProgressIndicator());
+              return Center(child: Text('No Donated Medicines'));
             return ListView.builder(
                 itemCount: medicineSnapshot.data!.docs.length,
                 itemBuilder: (context, index) {
@@ -158,9 +158,18 @@ class _MarketState extends State<Market> {
                                                 context: context,
                                                 builder: (context) {
                                                   return AlertDialog(
-                                                    title: Text('Contact'),
-                                                    content: Text(
-                                                        '${userData['phoneno']}'),
+                                                    title: medicineData[
+                                                                'requested_by'] ==
+                                                            null
+                                                        ? Text('Contact')
+                                                        : Text('Sorry'),
+                                                    content: medicineData[
+                                                                'requested_by'] ==
+                                                            null
+                                                        ? Text(
+                                                            '${userData['phoneno']}')
+                                                        : Text(
+                                                            'Already requested by someone else'),
                                                     actions: [
                                                       TextButton(
                                                           onPressed: () {
@@ -171,38 +180,69 @@ class _MarketState extends State<Market> {
                                                     ],
                                                   );
                                                 }).then((value) {
-                                              db
-                                                  .collection('Users')
-                                                  .doc(widget.currentUser?.uid)
-                                                  .collection('Requests')
-                                                  .doc(doc.id)
-                                                  .set({
-                                                "donator_id":
-                                                    medicineData['created_by'],
-                                                "donator_name":
-                                                    '${userData['fname']} ${userData['lname']}',
-                                                "quantity":
-                                                    medicineData['quantity'],
-                                                "medicine_name": medicineData[
-                                                    'medicine_name'],
+                                              medicineData['requested_by'] ==
+                                                      null
+                                                  ? db
+                                                      .collection('Users')
+                                                      .doc(widget
+                                                          .currentUser?.uid)
+                                                      .collection('Requests')
+                                                      .doc(doc.id)
+                                                      .set({
+                                                      "donator_id":
+                                                          medicineData[
+                                                              'created_by'],
+                                                      "donator_name":
+                                                          '${userData['fname']} ${userData['lname']}',
+                                                      "quantity": medicineData[
+                                                          'quantity'],
+                                                      "medicine_name":
+                                                          medicineData[
+                                                              'medicine_name'],
 
-                                                // "requested_by":
-                                                //     currentUser?.uid,
-                                                "requested_on": DateTime.now()
-                                              });
+                                                      // "requested_by":
+                                                      //     currentUser?.uid,
+                                                      "requested_on":
+                                                          DateTime.now()
+                                                    }).then((value) {
+                                                      db
+                                                          .collection('Users')
+                                                          .doc(medicineData[
+                                                              'created_by'])
+                                                          .collection(
+                                                              'Donations')
+                                                          .doc(doc.id)
+                                                          .update({
+                                                        "requested_by": widget
+                                                            .currentUser?.uid
+                                                      }).then((value) {
+                                                        db
+                                                            .collection(
+                                                                'Market')
+                                                            .doc(doc.id)
+                                                            .update({
+                                                          "requested_by": widget
+                                                              .currentUser?.uid
+                                                        });
+                                                      });
+                                                    })
+                                                  : null;
                                             });
                                           },
-                                          child: Container(
-                                            padding: EdgeInsets.all(5),
-                                            child: Text(
-                                              'Request',
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: Colors.teal.shade900,
-                                            ),
-                                          ),
+                                          child: medicineData['created_by'] ==
+                                                  widget.currentUser?.uid
+                                              ? Container()
+                                              : Container(
+                                                  padding: EdgeInsets.all(5),
+                                                  child: Text(
+                                                    'Request',
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.teal.shade900,
+                                                  ),
+                                                ),
                                         ),
                                       ),
                                     ),

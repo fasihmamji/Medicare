@@ -16,7 +16,12 @@ class _InputwrapperState extends State<Inputwrapper> {
   FirebaseAuth auth = FirebaseAuth.instance;
 
   Future signIn(email, password) async {
-    await auth.signInWithEmailAndPassword(email: email, password: password);
+    try {
+      await auth.signInWithEmailAndPassword(email: email, password: password);
+    } on FirebaseAuthException catch (err) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('${err.message}')));
+    }
   }
 
   final emailController = TextEditingController();
