@@ -42,7 +42,7 @@ class _TransactionsState extends State<Transactions> {
               child: CircularProgressIndicator(),
             );
           if (snapshot.data!.docs.isEmpty) {
-            return Center(child: Text('No donated medicines'));
+            return Center(child: Text('No Transactions'));
           }
           if (snapshot.connectionState == ConnectionState.waiting)
             return Center(child: CircularProgressIndicator());
@@ -74,11 +74,50 @@ class _TransactionsState extends State<Transactions> {
 
                     return Column(
                       children: [
-                        Text(transactionData['donor_id']),
-                        Text(transactionData['medicine_name']),
-                        Text(transactionData['reciever_id']),
-                        Text(transactionData['quantity'].toString()),
-                        Text(format.format(date))
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Donor ID:'),
+                            Text(transactionData['donor_id']),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Reciver ID:'),
+                            Text(transactionData['reciever_id']),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Medicine Name:'),
+                            Text(transactionData['medicine_name']),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Quantity:'),
+                            Text(transactionData['quantity'].toString()),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Transaction Date:'),
+                            Text(format.format(date))
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20,
+                          child: Divider(
+                            thickness: 1,
+                            color: Colors.teal.shade900,
+                            indent: 5,
+                            endIndent: 2,
+                          ),
+                        ),
                       ],
                     );
                   });

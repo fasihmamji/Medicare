@@ -48,7 +48,7 @@ class _RecievedState extends State<Recieved> {
                 child: Text('data null'),
               );
             if (snapshot.data!.docs.isEmpty) {
-              return Center(child: Text('No donated medicines'));
+              return Center(child: Text('No Medicine Request'));
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: Text('waiting'));

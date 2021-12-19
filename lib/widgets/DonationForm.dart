@@ -43,7 +43,7 @@ class _DonationFormState extends State<DonationForm> {
               iconTheme: IconThemeData(color: Colors.white),
               centerTitle: true,
               elevation: 0,
-              backgroundColor: Colors.teal,
+              backgroundColor: Colors.teal.shade900,
               title: Text(
                 'Enter Medicine Details',
                 style: TextStyle(

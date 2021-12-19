@@ -89,7 +89,7 @@ class _MarketState extends State<Market> {
                 child: CircularProgressIndicator(),
               );
             if (medicineSnapshot.data!.docs.isEmpty) {
-              return Center(child: Text('No donated medicines'));
+              return Center(child: Text('No Donated Medicines'));
             }
             if (medicineSnapshot.connectionState == ConnectionState.waiting)
               return Center(child: CircularProgressIndicator());
@@ -185,7 +185,7 @@ class _MarketState extends State<Market> {
                                                     medicineData['quantity'],
                                                 "medicine_name": medicineData[
                                                     'medicine_name'],
-                                                
+
                                                 // "requested_by":
                                                 //     currentUser?.uid,
                                                 "requested_on": DateTime.now()

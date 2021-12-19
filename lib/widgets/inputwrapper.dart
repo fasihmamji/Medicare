@@ -14,9 +14,11 @@ class Inputwrapper extends StatefulWidget {
 
 class _InputwrapperState extends State<Inputwrapper> {
   FirebaseAuth auth = FirebaseAuth.instance;
-  Future signIn(email,password) async{
+
+  Future signIn(email, password) async {
     await auth.signInWithEmailAndPassword(email: email, password: password);
   }
+
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   bool _isHidden = true;
@@ -27,17 +29,18 @@ class _InputwrapperState extends State<Inputwrapper> {
       children: [
         Column(
           children: [
-            TextField(
+            TextFormField(
               controller: emailController,
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
-                  fillColor: Colors.grey.shade200,
-                  filled: true,
-                  labelText: 'E-Mail',
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  prefixIcon: const Icon(Icons.email),
-                  hintText: 'abcdxye@gmail.com'),
+                fillColor: Colors.grey.shade200,
+                filled: true,
+                labelText: 'E-Mail',
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                prefixIcon: const Icon(Icons.email),
+                hintText: 'someone@gmail.com',
+              ),
             ),
             const SizedBox(
               height: 10,
@@ -80,7 +83,7 @@ class _InputwrapperState extends State<Inputwrapper> {
           height: 50,
           width: MediaQuery.of(context).size.width * 0.73,
           child: ElevatedButton(
-            onPressed: (){
+            onPressed: () {
               signIn(emailController.text, passwordController.text);
             },
             child: Text(

@@ -41,7 +41,9 @@ class _DonationState extends State<Donation> {
               return DonationForm();
             }));
           },
-          child: Icon(Icons.add),
+          child: Icon(
+            Icons.add,
+          ),
         ),
         body: StreamBuilder<QuerySnapshot>(
           stream: db
@@ -59,7 +61,7 @@ class _DonationState extends State<Donation> {
                 child: CircularProgressIndicator(),
               );
             if (snapshot.data!.docs.isEmpty) {
-              return Center(child: Text('No donated medicines'));
+              return Center(child: Text('No Donated Medicines'));
             }
             if (snapshot.connectionState == ConnectionState.waiting)
               return Center(child: CircularProgressIndicator());
