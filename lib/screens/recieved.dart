@@ -140,6 +140,13 @@ class _RecievedState extends State<Recieved> {
                                                   .collection('Market')
                                                   .doc(doc.id)
                                                   .delete();
+                                            }).then((value){
+                                              db
+                                                .collection('Users')
+                                                .doc(data['donator_id'])
+                                                .collection('Donations')
+                                                .doc(doc.id)
+                                                .delete();
                                             });
                                           }),
                                       GestureDetector(
