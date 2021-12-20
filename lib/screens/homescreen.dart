@@ -55,9 +55,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       backgroundColor: Color(0xfff9f7fb),
-      bottomNavigationBar: Container(
-        color: Colors.white,
-        child: BottomNavigationBar(
+      bottomNavigationBar: BottomNavigationBar(
+            showSelectedLabels: true,
+            showUnselectedLabels: true,
             onTap: (index) {
               setState(() {
                 selectedIndex = index;
@@ -65,15 +65,11 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             currentIndex: selectedIndex,
             backgroundColor: Colors.teal.shade900,
-            unselectedLabelStyle:
-                Theme.of(context).bottomNavigationBarTheme.unselectedLabelStyle,
             selectedLabelStyle: TextStyle(color: Colors.white),
-            showSelectedLabels: true,
-            showUnselectedLabels: true,
             type: BottomNavigationBarType.fixed,
             items: [
               BottomNavigationBarItem(
-                icon: Icon(Icons.view_list, color: Colors.white),
+                icon: Icon(Icons.home, color: Colors.white),
                 label: 'Market',
               ),
               BottomNavigationBarItem(
@@ -89,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 label: 'Profile',
               ),
             ]),
-      ),
+      
       body: pages[selectedIndex],
     );
   }

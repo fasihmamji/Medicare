@@ -93,7 +93,19 @@ class _SettingspassState extends State<Settingspass> {
                       style: TextStyle(fontSize: 22),
                     ),
                     onPressed: () {
-                      auth.sendPasswordResetEmail(email: emailController.text);
+                      try {
+                        auth
+                            .sendPasswordResetEmail(email: emailController.text)
+                            .then((value) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            
+                              content: Text(
+                                  'A password reset link is successfully sent on ${emailController.text}')));
+                        });
+                      } on FirebaseAuthException catch (err) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('${err.message}')));
+                      }
                     },
                   ),
                 ),

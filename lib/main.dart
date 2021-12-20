@@ -19,8 +19,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'MediCare',
       theme: ThemeData(
-        backgroundColor: Color(0xfff9f7fb),
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: const Color(0xfff9f7fb),
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           selectedLabelStyle: TextStyle(color: Colors.white),
         ),
         textTheme: GoogleFonts.nunitoTextTheme(

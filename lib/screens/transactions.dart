@@ -52,7 +52,7 @@ class _TransactionsState extends State<Transactions> {
 
           return userTransaction.isEmpty
               ? Center(
-                  child: CircularProgressIndicator(),
+                  child: Text('You have not done any transactions'),
                 )
               : ListView.builder(
                   itemCount: userTransaction.length,
@@ -65,53 +65,153 @@ class _TransactionsState extends State<Transactions> {
                         transactionData['transaction_date'].toDate();
                     var format = DateFormat('dd-MM-yyyy ');
 
-                    return Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Donor ID:'),
-                            Text(transactionData['donor_id']),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Reciver ID:'),
-                            Text(transactionData['reciever_id']),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Medicine Name:'),
-                            Text(transactionData['medicine_name']),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Quantity:'),
-                            Text(transactionData['quantity'].toString()),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Transaction Date:'),
-                            Text(format.format(date))
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20,
-                          child: Divider(
-                            thickness: 1,
-                            color: Colors.teal.shade900,
-                            indent: 5,
-                            endIndent: 2,
+                    return Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Card(
+                        elevation: 0,
+                        borderOnForeground: false,
+                        child: Padding(
+                          padding: const EdgeInsets.all(0.0),
+                          child: Container(
+                            padding: EdgeInsets.all(12.0),
+                            decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: <BoxShadow>[
+                              BoxShadow(
+                                  color: Colors.grey,
+                                  offset: const Offset(2.0, 4.0),
+                                  blurRadius: 4),
+                            ],
+                            ),
+                            child: Column(
+                              
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 5),
+                                      child: Text(
+                                        'Donor ID:',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15),
+                                      ),
+                                    ),
+                                    FutureBuilder<DocumentSnapshot>(
+                                        future: db
+                                            .collection('Users')
+                                            .doc(transactionData['donor_id'])
+                                            .get(),
+                                        builder: (context, snapshot) {
+                                          if (!snapshot.hasData) {
+                                            return Align(
+                                                alignment: Alignment.centerRight,
+                                                child: Text('Loading...'));
+                                          }
+                                          Map<String, dynamic> donorData =
+                                              snapshot.data!.data()
+                                                  as Map<String, dynamic>;
+                                          return Padding(
+                                            padding:
+                                                const EdgeInsets.only(right: 5),
+                                            child: Text(
+                                                '${donorData['fname']} ${donorData['lname']}'),
+                                          );
+                                        })
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 5),
+                                      child: Text('Reciver ID:',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15)),
+                                    ),
+                                    FutureBuilder<DocumentSnapshot>(
+                                        future: db
+                                            .collection('Users')
+                                            .doc(transactionData['reciever_id'])
+                                            .get(),
+                                        builder: (context, snapshot) {
+                                          if (!snapshot.hasData) {
+                                            return Align(
+                                                alignment: Alignment.centerRight,
+                                                child: Text('Loading...'));
+                                          }
+                                          Map<String, dynamic> recieverData =
+                                              snapshot.data!.data()
+                                                  as Map<String, dynamic>;
+                                          return Padding(
+                                            padding:
+                                                const EdgeInsets.only(right: 5),
+                                            child: Text(
+                                                '${recieverData['fname']} ${recieverData['lname']}'),
+                                          );
+                                        })
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(left:5),
+                                      child: Text('Medicine Name:',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15)),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right:5),
+                                      child: Text(transactionData['medicine_name']),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(left:5),
+                                      child: Text('Quantity:',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15)),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right:5),
+                                      child: Text(transactionData['quantity'].toString()),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(left:5),
+                                      child: Text('Transaction Date:',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15)),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right:5),
+                                      child: Text(format.format(date)),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ],
+                      ),
                     );
                   });
         },

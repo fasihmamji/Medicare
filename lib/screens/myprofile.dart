@@ -92,7 +92,8 @@ class _MyprofileState extends State<Myprofile> {
                         backgroundColor: Colors.teal.shade700,
                         radius: 40,
                         child: Icon(
-                          Icons.verified_user,
+                          Icons.person_sharp,
+                          size: 40,
                           color: Colors.black,
                         ),
                       ),
@@ -199,7 +200,7 @@ class _MyprofileState extends State<Myprofile> {
                   Container(
                     child: Column(
                       children: [
-                        cardTile(Icons.directions_walk, 'Your Transactions',
+                        cardTile(Icons.list_outlined, 'Your Transactions',
                             () {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
@@ -226,7 +227,7 @@ class _MyprofileState extends State<Myprofile> {
                                     );
                                   }));
                         }),
-                        cardTile(Icons.logout, 'Edit Profile', () {
+                        cardTile(Icons.edit, 'Edit Profile', () {
                           Navigator.of(context)
                               .push(MaterialPageRoute(builder: (context) {
                             return Editprofile(

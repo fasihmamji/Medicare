@@ -81,10 +81,12 @@ class _EditprofileState extends State<Editprofile> {
                       width: 130,
                       height: 130,
                       child: CircleAvatar(
-                        radius: 60,
-                        backgroundColor: Colors.teal.shade900,
-                        child: Center(
-                          child: Icon(Icons.verified_user),
+                        backgroundColor: Colors.teal.shade700,
+                        radius: 40,
+                        child: Icon(
+                          Icons.person_sharp,
+                          size: 40,
+                          color: Colors.black,
                         ),
                       ),
                     ),

@@ -36,6 +36,7 @@ class _DonationState extends State<Donation> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.teal.shade900,
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return DonationForm();

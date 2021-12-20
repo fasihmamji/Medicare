@@ -21,16 +21,19 @@ class MyInfo extends StatelessWidget {
       this.dob})
       : super(key: key);
 
-  Card cardTile(key, value) {
-    return Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text(key), Text(value)],
-          ),
-        ));
+  Widget cardTile(key, value) {
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Card(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [Text(key), Text(value)],
+            ),
+          )),
+    );
   }
 
   @override
@@ -47,42 +50,32 @@ class MyInfo extends StatelessWidget {
     };
 
     return Scaffold(
-        backgroundColor: Colors.teal.shade900,
         appBar: AppBar(
           elevation: 0,
+          title: Text(
+            'Your Information',
+            style: TextStyle(
+                fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+          ),
           iconTheme: IconThemeData(color: Colors.black),
           backgroundColor: Colors.transparent,
           automaticallyImplyLeading: true,
+          centerTitle: true,
         ),
-        body: SingleChildScrollView(
-            child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                'Your Information',
-                style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
-            ),
-            Container(
-              height: 600,
-              child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: info.length,
-                  itemBuilder: (context, index) {
-                    var keys = [];
-                    var values = [];
-                    info.forEach((key, value) {
-                      keys.add(key);
-                      values.add(value);
-                    });
-                    return cardTile(keys[index], values[index]);
-                  }),
-            ),
-          ],
-        )));
+        body: Padding(
+          padding: const EdgeInsets.only(top:12,bottom: 10),
+          child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: info.length,
+              itemBuilder: (context, index) {
+                var keys = [];
+                var values = [];
+                info.forEach((key, value) {
+                  keys.add(key);
+                  values.add(value);
+                });
+                return cardTile(keys[index], values[index]);
+              }),
+        ));
   }
 }
