@@ -266,7 +266,13 @@ class _MySignUpState extends State<MySignUp> {
                       if (val!.isEmpty) {
                         return "Phone Number can't be empty";
                       }
+
                       if (val.length != 11) return "Enter a valid phone number";
+
+                      if (val.length != 11) {
+                        return 'Invalid Number';
+                      }
+
                     },
                   ),
                   const SizedBox(
@@ -287,9 +293,12 @@ class _MySignUpState extends State<MySignUp> {
                       if (val!.isEmpty) {
                         return "Age can't be empty";
                       }
+
                       if (int.parse(val) < 0) {
                         return "Enter a valid age";
                       }
+
+
                     },
                   ),
                   const SizedBox(
@@ -341,9 +350,6 @@ class _MySignUpState extends State<MySignUp> {
                     validator: (val) {
                       if (val!.isEmpty) {
                         return "CNIC can't be empty";
-                      }
-                      if (val.length != 13) {
-                        return "CNIC must be 13 digits";
                       }
                     },
                   ),

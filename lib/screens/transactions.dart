@@ -92,7 +92,7 @@ class _TransactionsState extends State<Transactions> {
                                     Padding(
                                       padding: const EdgeInsets.only(left: 5),
                                       child: Text(
-                                        'Donor :',
+                                        'Donor Name:',
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 15),
@@ -128,7 +128,7 @@ class _TransactionsState extends State<Transactions> {
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.only(left: 5),
-                                      child: Text('Reciver :',
+                                      child: Text('Reciver Name:',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 15)),
