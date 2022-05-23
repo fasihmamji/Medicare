@@ -75,16 +75,15 @@ class _TransactionsState extends State<Transactions> {
                           child: Container(
                             padding: EdgeInsets.all(12.0),
                             decoration: BoxDecoration(
-                            color: Colors.white,
-                            boxShadow: <BoxShadow>[
-                              BoxShadow(
-                                  color: Colors.grey,
-                                  offset: const Offset(2.0, 4.0),
-                                  blurRadius: 4),
-                            ],
+                              color: Colors.white,
+                              boxShadow: <BoxShadow>[
+                                BoxShadow(
+                                    color: Colors.grey,
+                                    offset: const Offset(2.0, 4.0),
+                                    blurRadius: 4),
+                              ],
                             ),
                             child: Column(
-                              
                               children: [
                                 Row(
                                   mainAxisAlignment:
@@ -93,7 +92,7 @@ class _TransactionsState extends State<Transactions> {
                                     Padding(
                                       padding: const EdgeInsets.only(left: 5),
                                       child: Text(
-                                        'Donor ID:',
+                                        'Donor :',
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 15),
@@ -107,7 +106,8 @@ class _TransactionsState extends State<Transactions> {
                                         builder: (context, snapshot) {
                                           if (!snapshot.hasData) {
                                             return Align(
-                                                alignment: Alignment.centerRight,
+                                                alignment:
+                                                    Alignment.centerRight,
                                                 child: Text('Loading...'));
                                           }
                                           Map<String, dynamic> donorData =
@@ -128,7 +128,7 @@ class _TransactionsState extends State<Transactions> {
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.only(left: 5),
-                                      child: Text('Reciver ID:',
+                                      child: Text('Reciver :',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 15)),
@@ -141,7 +141,8 @@ class _TransactionsState extends State<Transactions> {
                                         builder: (context, snapshot) {
                                           if (!snapshot.hasData) {
                                             return Align(
-                                                alignment: Alignment.centerRight,
+                                                alignment:
+                                                    Alignment.centerRight,
                                                 child: Text('Loading...'));
                                           }
                                           Map<String, dynamic> recieverData =
@@ -161,15 +162,16 @@ class _TransactionsState extends State<Transactions> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.only(left:5),
+                                      padding: const EdgeInsets.only(left: 5),
                                       child: Text('Medicine Name:',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 15)),
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.only(right:5),
-                                      child: Text(transactionData['medicine_name']),
+                                      padding: const EdgeInsets.only(right: 5),
+                                      child: Text(
+                                          transactionData['medicine_name']),
                                     ),
                                   ],
                                 ),
@@ -178,15 +180,16 @@ class _TransactionsState extends State<Transactions> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.only(left:5),
+                                      padding: const EdgeInsets.only(left: 5),
                                       child: Text('Quantity:',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 15)),
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.only(right:5),
-                                      child: Text(transactionData['quantity'].toString()),
+                                      padding: const EdgeInsets.only(right: 5),
+                                      child: Text(transactionData['quantity']
+                                          .toString()),
                                     ),
                                   ],
                                 ),
@@ -195,14 +198,14 @@ class _TransactionsState extends State<Transactions> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.only(left:5),
+                                      padding: const EdgeInsets.only(left: 5),
                                       child: Text('Transaction Date:',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 15)),
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.only(right:5),
+                                      padding: const EdgeInsets.only(right: 5),
                                       child: Text(format.format(date)),
                                     )
                                   ],
